@@ -44,18 +44,20 @@ class myDict(dict):
         
         keys = self.keys()
         new_keys = []
-        
+        int_keys = []
+        str_keys = []
         for key in keys:
             if isinstance(key, int):
                 if conditions_count == 1:
                     new_keys.append([key])
+                    int_keys.append(key)
                 else:
                     continue
             else:    
                 value = key.split(',')
+                str_keys.append(key)
                 try:
                     value = list(map(int, value))
-                    
                     if len(value) == conditions_count:
                         new_keys.append(value)
                 
@@ -64,6 +66,7 @@ class myDict(dict):
         
         num = 0
         condition = ""
+        
         index_condition = 0
         
         for token in tokens:
@@ -71,7 +74,10 @@ class myDict(dict):
                 case TokenType.CONDITION:
                     condition = token.value
                 case TokenType.NUMBER:
-                    num = int(token.value)
+                    if('.' in token.value):
+                        num = float(token.value)
+                    else: 
+                        num = int(token.value)
                     new_keys = self.compare(new_keys, condition, num, index_condition)
                 case TokenType.SEPARATOR:
                     index_condition += 1
@@ -81,8 +87,26 @@ class myDict(dict):
                     raise myDictException(f"Unknown token {token}")
         
         
+        result = myDict()
+        for key in new_keys:
+            if (key[0] in int_keys):
+                if str(key[0]) in str_keys and result.get(str(key[0])) is None:
+                    result[str(key[0])] = self[str(key[0])]
+                    continue
+                result[key[0]] = self[key[0]]
+                continue
+            
+            try:
+                print("here")
+                str_key = ', '.join(list(map(str, key)))
+                result[str_key] = self[str_key]            
+            except KeyError:
+                raise myDictException("Да, я знаю об этой проблеме, обещаю, что \
+                                      в следующей версии я не буду генерить ключи самостоятельно, \
+                                      а заведу массив с индексами нужных ключей, \
+                                      а также напишу функцию для получения ключа по индексу")        
         
-        return new_keys
+        return result 
 
 
     def compare(self, keys, condition, num, index_condition) -> list:

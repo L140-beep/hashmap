@@ -10,6 +10,8 @@ class Lexer:
         self.current_char = ""
     
     def init_lexer(self, string : str):
+        if not string:
+            raise LexerException("Empty string!")
         self.pos = 0
         self.string = string
         self.current_char = string[self.pos]

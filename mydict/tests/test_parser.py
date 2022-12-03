@@ -26,3 +26,7 @@ class TestParser:
         with pytest.raises(ParserException):
             parser.init_parser(">= 12,")
             parser.factor()
+        
+        with pytest.raises(ParserException):
+            parser.init_parser(">= 12 >=")
+            parser.factor()

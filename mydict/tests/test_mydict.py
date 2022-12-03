@@ -1,6 +1,5 @@
 import pytest
 from mydict.myDict import myDict, myDictException
-
 class TestMyDict:
     def test_init(self):
         mydict = myDict()
@@ -43,7 +42,7 @@ class TestMyDict:
     def test_setitem(self):
         mydict = myDict()
         
-        #Если инициализировать инициализировать таким образом, то значение в скобках затеряется навсегда
+        #Если инициализировать словарь таким образом, то значение в скобках затеряется навсегда
         #mydict = myDict({"3" : 0, "1, 2" : 1, "(1, 2)" : 0})
         
         mydict["1, 2"] = "without brackets"
@@ -52,9 +51,22 @@ class TestMyDict:
         
     
     def test_ploc(self):
-        mydict = myDict({"1" : 1, "2" : 2, "3" : 3})
-                
-        assert mydict.ploc(">=2") == {"2" : 2, "3" : 3}        
+        assert myDict({"1" : 1, "2" : 2, "3" : 3}).ploc(">=2") == {"2" : 2, "3" : 3}
+        assert myDict({1 : 1, "1" : 2,  0 : 3}).ploc(">= 1") == {1 : 1, "1" : 2}        
+        assert myDict({2 : 1,"2": 2, "2, 3" : 0, "3, 5": 0, "2, 3, 5": 0, "value" : 0}).ploc(">= 2, >= 3") \
+                        == {"2, 3" : 0, "3, 5" : 0}    
 
-
-    
+        assert myDict({"2": 0, "0" : 0}).ploc(">= 1.10") == {"2" : 0}        
+        assert myDict({"value" : 0, "1" : 0}).ploc("== 1") == {"1" : 0}
+        assert myDict({"value1" : 0, "value2" : 0}).ploc("== 1") == {}
+        assert myDict({"value" : 0, "1" : 0}).ploc("                ==                  1                  ") == {"1" : 0}
+        
+        assert myDict({"1" : 0, 2 : 0}).ploc("<= 1") == {"1" : 0}
+        assert myDict({"1" : 0, 2 : 0, 0 : 0}).ploc("<> 1") == {2 : 0, 0 : 0}
+        assert myDict({"1" : 0, 2 : 0, 0 : 0}).ploc("< 1") == {0 : 0}
+        assert myDict({"1" : 0, 2 : 0}).ploc("> 1") == {2 : 0}
+        
+        with pytest.raises(myDictException):
+            myDict({"1,2" : 0}).ploc("== 1, >><<<><><><><><><><><> 2")
+        with pytest.raises(myDictException):    
+            myDict({"1,2" : 0}).ploc("== 1, == 2")

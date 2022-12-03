@@ -15,11 +15,13 @@ parser.factor()
 #     print(token)
 #     tokens.append(token)
 
-mydict = myDict({2 : 1,"2": 0, "2, 3" : 0, "3, 5": 0, "1, 3, 5": 0, "value" : 0})
+mydict = myDict({2 : 1,"2": 2, "2, 3" : 0, "3, 5": 0, "1, 3, 5": 0, "value" : 0})
 
-keys = mydict.ploc(">=2")
+result = mydict.ploc(">= 2")
 
-print(keys)
+dick = dict({2 : 1,"2": 2, "2, 3" : 0, "3, 5": 0, "1, 3, 5": 0, "value" : 0})
+
+print(result)
 
 #print(len(parser.tokens))
 # assert parser.tokens == [Token(TokenType.CONDITION, ">="), Token(TokenType.NUMBER, "12")]

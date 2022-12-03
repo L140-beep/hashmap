@@ -1,7 +1,7 @@
 from .terminals import TerminalsType, TokenType, Token
 
 class LexerException(Exception):
-    pass
+    ...
 
 class Lexer:
     def __init__(self):

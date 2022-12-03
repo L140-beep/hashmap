@@ -1,5 +1,5 @@
 from .lexer import Lexer
-from .terminals import Token, TokenType
+from .terminals import Token, TokenType, TokenExpect
 
 class ParserException(Exception):
     ...
@@ -13,41 +13,42 @@ class Parser:
     
     def factor(self):
         token = self.current_token
-        print(self.current_token)
+        #print(self.current_token)
         match token.type:
             case TokenType.CONDITION:
                 self.tokens.append(token)
-                self.check_type(TokenType.NUMBER)
+                self.check_type(TokenExpect.CONDITION)
                 return
             case TokenType.NUMBER:
                 self.tokens.append(token)
-                self.check_type(TokenType.SEPARATOR)
+                self.check_type(TokenExpect.NUMBER)
                 return
             case TokenType.SEPARATOR:
                 self.conditions_count += 1
                 self.tokens.append(token)
                 self.lexer.forward()
-                self.check_type(TokenType.CONDITION)
+                self.check_type(TokenExpect.SEPARATOR)
                 return
             case _:
                 raise ParserException("Invalid token")
 
-    def check_type(self, expected : Token):
+    def check_type(self, expected : TokenExpect):
         self.current_token = self.lexer.next()
-        print(self.current_token)
         if self.current_token is None:
-            return
-        if self.current_token.type == expected:
-            #self.current_token = self.lexer.next()
+            if expected == TokenExpect.NUMBER:
+                return
+            else:
+                raise ParserException("Invalid argument")
+        if self.current_token.type in expected.value:
             self.factor()
-            
         else:
-            raise ParserException(f"Unexpected token {self.current_token.type}, expected {expected}") 
+            raise ParserException(f"Unexpected token {self.current_token.type}, expected {expected.value}") 
 
         
     def init_parser(self, s: str):
         self.lexer.init_lexer(s)
         self.current_token = self.lexer.next()
+        self.tokens = []
     
     def get_tokens(self):
-        return list(self.tokens)
+        return self.tokens

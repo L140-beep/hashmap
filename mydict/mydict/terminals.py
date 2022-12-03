@@ -18,6 +18,10 @@ class TokenType(Enum):
     # MORE = auto()
     NUMBER = auto()
 
+class TokenExpect(Enum):
+    CONDITION = [TokenType.NUMBER]
+    SEPARATOR = [TokenType.CONDITION]
+    NUMBER = [TokenType.SEPARATOR, None]
 class Token:
     def __init__(self, type, value) -> None:
         self.type = type
@@ -26,3 +30,5 @@ class Token:
     def __str__(self) -> str:
         return f"Token ({self.type}, {self.value})"
     
+    def __eq__(self, right : "Token"):
+        return self.type == right.type and self.value == right.value

@@ -9,7 +9,7 @@ class Lexer:
         self.string = ""
         self.current_char = ""
     
-    def init_lexer(self, string):
+    def init_lexer(self, string : str):
         self.pos = 0
         self.string = string
         self.current_char = string[self.pos]

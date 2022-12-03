@@ -10,12 +10,6 @@ class TerminalsType(Enum):
 class TokenType(Enum):
     CONDITION = auto()
     SEPARATOR = auto()
-    # EQUAL = auto()
-    # EQUAL_OR_MORE = auto()
-    # EQUAL_OR_LESS = auto()
-    # NOT_EQUAL = auto()
-    # LESS = auto()
-    # MORE = auto()
     NUMBER = auto()
 
 class TokenExpect(Enum):

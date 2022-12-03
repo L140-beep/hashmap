@@ -53,8 +53,8 @@ class TestMyDict:
     
     def test_ploc(self):
         mydict = myDict({"1" : 1, "2" : 2, "3" : 3})
-        
+                
         assert mydict.ploc(">=2") == {"2" : 2, "3" : 3}        
-        
+
 
     

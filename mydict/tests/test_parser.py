@@ -21,6 +21,7 @@ class TestParser:
                                        Token(TokenType.CONDITION, "=="), 
                                        Token(TokenType.NUMBER, "13")
                                        ]
+        assert parser.conditions_count == 2
         
         with pytest.raises(ParserException):
             parser.init_parser(">= 12,")

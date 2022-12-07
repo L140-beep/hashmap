@@ -52,21 +52,50 @@ class TestMyDict:
     
     def test_ploc(self):
         assert myDict({"1" : 1, "2" : 2, "3" : 3}).ploc(">=2") == {"2" : 2, "3" : 3}
-        assert myDict({1 : 1, "1" : 2,  0 : 3}).ploc(">= 1") == {1 : 1, "1" : 2}        
+        
+        assert myDict({1 : 1, "1" : 2,  0 : 3}).ploc(">= 1") == {1 : 1, "1" : 2}
+                
         assert myDict({2 : 1,"2": 2, "2, 3" : 0, "3, 5": 0, "2, 3, 5": 0, "value" : 0}).ploc(">= 2, >= 3") \
                         == {"2, 3" : 0, "3, 5" : 0}    
 
         assert myDict({"2": 0, "0" : 0}).ploc(">= 1.10") == {"2" : 0}        
+        
         assert myDict({"value" : 0, "1" : 0}).ploc("== 1") == {"1" : 0}
+        
         assert myDict({"value1" : 0, "value2" : 0}).ploc("== 1") == {}
+        
         assert myDict({"value" : 0, "1" : 0}).ploc("                ==                  1                  ") == {"1" : 0}
         
         assert myDict({"1" : 0, 2 : 0}).ploc("<= 1") == {"1" : 0}
+        
         assert myDict({"1" : 0, 2 : 0, 0 : 0}).ploc("<> 1") == {2 : 0, 0 : 0}
+        
         assert myDict({"1" : 0, 2 : 0, 0 : 0}).ploc("< 1") == {0 : 0}
+        
         assert myDict({"1" : 0, 2 : 0}).ploc("> 1") == {2 : 0}
         
         with pytest.raises(myDictException):
-            myDict({"1,2" : 0}).ploc("== 1, >><<<><><><><><><><><> 2")
+            myDict({"1, 2" : 0}).ploc("== 1, >><<<><><><><><><><><> 2")
         with pytest.raises(myDictException):    
             myDict({"1,2" : 0}).ploc("== 1, == 2")
+    
+    def test_ploc_by_Kiselev(self):
+        my_map = myDict()
+        my_map["value1"] = 1
+        my_map["value2"] = 2
+        my_map["value3"] = 3
+        my_map["1"] = 10
+        my_map["2"] = 20
+        my_map["3"] = 30
+        my_map["(1, 5)"] = 100
+        my_map["(5, 5)"] = 200
+        my_map["(10, 5)"] = 300
+        my_map["(1, 5, 3)"] = 400
+        my_map["(5, 5, 4)"] = 500
+        my_map["(10, 5, 5)"] = 600
+        
+        assert my_map.ploc(">=1") == {"1" : 10, "2" : 20, "3" : 30}
+        assert my_map.ploc("<3") == {"1" : 10, "2" : 20}
+        assert my_map.ploc(">=10, >0") == {"10, 5" : 300}
+        assert my_map.ploc("<5, >=5, >=3") == {"1, 5, 3" : 400}            
+    
